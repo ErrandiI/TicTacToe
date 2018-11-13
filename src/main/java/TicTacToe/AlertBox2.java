@@ -15,10 +15,10 @@ public class AlertBox2 {
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(1050);
-        window.setMaxWidth(1050);
-        window.setMinHeight(150);
-        window.setMaxHeight(150);
+        window.setMinWidth(605);
+        window.setMaxWidth(605);
+        window.setMinHeight(200);
+        window.setMaxHeight(200);
 
         Label label = new Label();
         label.setText(message);
@@ -32,7 +32,5 @@ public class AlertBox2 {
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
-
     }
-
 }
