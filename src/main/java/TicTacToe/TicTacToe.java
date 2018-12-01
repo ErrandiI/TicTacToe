@@ -28,6 +28,7 @@ public class TicTacToe extends Application {
     public boolean startable = false;
     Stage window;
     BorderPane layout;
+    private StartGameBox startGameBox;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -248,8 +249,10 @@ public class TicTacToe extends Application {
         }
     }
     private void startNewGame() {
-        if (!startable)
-            StartGameBox.display("Start settings", "Before you will start you need to select a few settings");
+        if (!startable){
+            startGameBox = new StartGameBox("Start settings", "Before you will start you need to select a few settings");
+            startGameBox.showAndWait();
+        }
         startable = true;
 
         for (int i = 0; i < 3; i++) {
@@ -273,7 +276,16 @@ public class TicTacToe extends Application {
         if (answer)
             window.close();
     }
-//    private void playerReader() {
-//        StartGameBox.getChoice();
-//    }
+
+    private void playerReader() {
+        // you can use
+        startGameBox.getPlayer();
+        startGameBox.getFigure();
+        startGameBox.getFirstPlayer();
+        // or global acces settings
+        GameSettings settings = GameSettings.getInstance();
+        settings.getPlayer();
+        settings.getFigure();
+        settings.getFirstPlayer();
+    }
 }
