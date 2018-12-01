@@ -19,11 +19,13 @@ import java.util.List;
 
 public class TicTacToe extends Application {
 
-    private Label statusMsg = new Label("X must play");
+    private Label statusMsg = new Label("Click File -> Start a New Game");
     private Cell [][] board = new Cell[3][3];
+    private boolean withComputer = true;
     private List<WinCondition> checkList = new ArrayList<>();
     private boolean playable = true;
     private boolean turnX = true;
+    public boolean startable = false;
     Stage window;
     BorderPane layout;
 
@@ -48,13 +50,20 @@ public class TicTacToe extends Application {
         newGame.setOnAction(e -> startNewGame());
         fileMenu.getItems().add(newGame);
         fileMenu.getItems().add(new SeparatorMenuItem());
+        MenuItem resetSettings = new MenuItem("Reset settings");
+        resetSettings.setOnAction(e  -> {
+            reset();
+            startNewGame();
+        });
+        fileMenu.getItems().add(resetSettings);
+        fileMenu.getItems().add(new SeparatorMenuItem());
         MenuItem closeGame = new MenuItem("Exit...");
         closeGame.setOnAction(e -> closeProgram());
         fileMenu.getItems().add(closeGame);
 
         //Menu Help items
         MenuItem howToPlay = new MenuItem("How to play...");
-        howToPlay.setOnAction(e -> AlertBox2.display("How to play", " The board is made of a 3 x 3 grid of squares. Though traditionally, the first player goes with \"X\", but you can \ndecide whether you wants to go with \"X\"s or \"O\"s. These symbols will be placed on the table, in the attempt to \nhave three of them in a row. If you're going first, then the best move you can make is to move into the center. \nThis will maximize your chances of winning. The first player to draw three of his or her symbols in a row, \noptimal strategy, then there's a good chance that no one will win because you will have blocked all of each \nother's opportunities to create a row of three. "));
+        howToPlay.setOnAction(e -> AlertBox2.display("How to play", "The board is made of a 3 x 3 grid of squares. Though traditionally, the first player goes with \"X\", but you can \ndecide whether you wants to go with \"X\"s or \"O\"s. These symbols will be placed on the table, in the attempt to \nhave three of them in a row. If you're going first, then the best move you can make is to move into the center. \nThis will maximize your chances of winning. The first player to draw three of his or her symbols in a row, \noptimal strategy, then there's a good chance that no one will win because you will have blocked all of each \nother's opportunities to create a row of three. "));
         helpMenu.getItems().add(howToPlay);
         helpMenu.getItems().add(new SeparatorMenuItem());
         MenuItem about = new MenuItem("About...");
@@ -120,52 +129,69 @@ public class TicTacToe extends Application {
             getChildren().addAll(border, text);
 
             setOnMouseClicked(e -> {
-                if (!playable)
-                    return;
-                statusMsg.setText("This move is forbidden");
-
-                if (e.getButton() == MouseButton.PRIMARY){
-                    if (!turnX)
+                if (!startable) {
+                    startNewGame();
+                } else {
+                    if (!playable)
                         return;
-                    if (checkValue())
-                        return;
-                    drawX();
-                    turnX = false;
-                    gameStatus();
 
-                    if(!playable) {
-                        statusMsg.setText("X won!");
-                    } else if (isBoardFull()) {
-                    statusMsg.setText("It's a draw!");
+                    if (withComputer && !turnX) {
+                        AI.computerMove(turnX,board);
+                        turnX=!turnX;
+                        gameStatus();
+                        if (!playable) {
+                            statusMsg.setText("O won!");
+                        } else if (isBoardFull()) {
+                            statusMsg.setText("It's a draw!");
+                        } else {
+                            statusMsg.setText("Player X turn.");
+                        }
                     } else {
-                        statusMsg.setText("Player O turn.");
-                    }
+                        statusMsg.setText("This move is forbidden");
+                        if (e.getButton() == MouseButton.PRIMARY) {
+                            if (!turnX)
+                                return;
+                            if (checkValue())
+                                return;
+                            drawX();
+                            turnX = false;
+                            gameStatus();
 
-                } else if (e.getButton() == MouseButton.SECONDARY ){
-                    if (turnX)
-                        return;
-                    if (checkValue())
-                        return;
-                    drawO();
-                    turnX = true;
-                    gameStatus();
+                            if (!playable) {
+                                statusMsg.setText("X won!");
+                            } else if (isBoardFull()) {
+                                statusMsg.setText("It's a draw!");
+                            } else {
+                                statusMsg.setText("Player O turn.");
+                            }
 
-                    if(!playable) {
-                        statusMsg.setText("0 won!");
-                    } else if (isBoardFull()) {
-                        statusMsg.setText("It's a draw!");
-                    } else {
-                        statusMsg.setText("Player X turn.");
+                        } else if (e.getButton() == MouseButton.SECONDARY) {
+                            if (turnX)
+                                return;
+                            if (checkValue())
+                                return;
+                            drawO();
+                            turnX = true;
+                            gameStatus();
+
+                            if (!playable) {
+                                statusMsg.setText("0 won!");
+                            } else if (isBoardFull()) {
+                                statusMsg.setText("It's a draw!");
+                            } else {
+                                statusMsg.setText("Player X turn.");
+                            }
+                        }
                     }
                 }
             });
         }
 
-        private void drawX() {
+        public void drawX() {
             text.setText("X");
         }
 
-        private void drawO() {
+        public void drawO() {
             text.setText("O");
         }
 
@@ -222,6 +248,10 @@ public class TicTacToe extends Application {
         }
     }
     private void startNewGame() {
+        if (!startable)
+            StartGameBox.display("Start settings", "Before you will start you need to select a few settings");
+        startable = true;
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 board[i][j].removeValue();
@@ -231,12 +261,19 @@ public class TicTacToe extends Application {
             }
         }
     }
+
+    private void reset() {
+        startable = false;
+    }
     public static void main(String[] args) {
         launch(args);
     }
     private void closeProgram() {
-        Boolean answer = ConfirmBox.display("Confirmation tab", "Are you sure you want to exit?");
+        Boolean answer = ConfirmBox.display("Confirmation tab", "Do you really want to close the game?");
         if (answer)
             window.close();
     }
+//    private void playerReader() {
+//        StartGameBox.getChoice();
+//    }
 }

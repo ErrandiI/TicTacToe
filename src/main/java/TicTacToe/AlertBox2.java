@@ -1,5 +1,6 @@
 package TicTacToe;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,8 +16,8 @@ public class AlertBox2 {
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(605);
-        window.setMaxWidth(605);
+        window.setMinWidth(625);
+        window.setMaxWidth(625);
         window.setMinHeight(200);
         window.setMaxHeight(200);
 
@@ -26,6 +27,7 @@ public class AlertBox2 {
         closeButton.setOnAction(e-> window.close());
 
         VBox layout = new VBox(10);
+        layout.setPadding(new Insets( 10));
         layout.getChildren().addAll(label, closeButton);
         layout.setAlignment(Pos.CENTER);
 

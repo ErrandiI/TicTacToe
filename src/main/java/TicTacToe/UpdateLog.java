@@ -1,5 +1,6 @@
 package TicTacToe;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,7 +26,9 @@ public class UpdateLog {
         Button closeButton = new Button("Close the window");
         closeButton.setOnAction(e-> window.close());
 
+
         VBox layout = new VBox(20);
+        layout.setPadding(new Insets( 10));
         layout.getChildren().addAll(label, closeButton);
         layout.setAlignment(Pos.BOTTOM_CENTER);
 
