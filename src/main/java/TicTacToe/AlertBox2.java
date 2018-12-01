@@ -16,10 +16,10 @@ public class AlertBox2 {
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(625);
-        window.setMaxWidth(625);
-        window.setMinHeight(200);
-        window.setMaxHeight(200);
+        window.setMinWidth(575);
+        window.setMaxWidth(575);
+        window.setMinHeight(250);
+        window.setMaxHeight(250);
 
         Label label = new Label();
         label.setText(message);

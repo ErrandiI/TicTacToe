@@ -1,7 +1,10 @@
 package TicTacToe;
 
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -10,72 +13,113 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class StartGameBox {
+public class StartGameBox extends Stage {
+    private final VBox layout;
+    private final ObservableList<Node> components;
+    private final ChoiceBox<String> playerCB;
+//    private final ChoiceBox<String> figureCB;
+//    private final ChoiceBox<String> firstPlayerCB;
 
-    public static void display(String title, String message) {
-        Stage window = new Stage();
+    public StartGameBox(String title, String message) {
+        initBox(title);
 
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle(title);
-        window.setMinWidth(350);
-        window.setMaxWidth(350);
-        window.setMinHeight(350);
-        window.setMaxHeight(350);
+        layout = createWindowLayout();
+        components = layout.getChildren();
+        components.add(new Label(message));
 
-        Label label = new Label();
-        label.setText(message);
-        Label label2 = new Label();
-        label2.setText("Will you play against other player or against computer?");
-        Label label3 = new Label();
-        label3.setText("Which figure will you select?");
-        Label label4 = new Label();
-        label4.setText("Who will start?");
+        playerCB = createPlayerSelector();
+//        figureCB = createFigureSelector();
+//        firstPlayerCB = createFirstPlayerSelector();
 
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        ChoiceBox<String> choiceBox2 = new ChoiceBox<>();
-        ChoiceBox<String> choiceBox3 = new ChoiceBox<>();
-        ///agains who
-        choiceBox.getItems().add("Player");
-        choiceBox.getItems().add("Computer");
-        ///which figure will use P1
-        choiceBox2.getItems().add("X");
-        choiceBox2.getItems().add("0");
-        ///who will start
-        choiceBox3.getItems().add("X");
-        choiceBox3.getItems().add("0");
-
-        Button next = new Button("Next");
-        next.setOnAction(e-> {
-            getChoice(choiceBox);
-            getChoice2(choiceBox2);
-            getChoice3(choiceBox3);
-            window.close();
-            PlayerNameBox.display("Name settings", "Please set nicknames for Player 1 and Player 2");
-        });
+        Button next = new Button("Start Game");
+        next.setOnAction(this::doNext);
         next.setTranslateY(25);
-
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets( 10));
-        layout.getChildren().addAll(label, label2, choiceBox, label3, choiceBox2, label4, choiceBox3, next);
-        layout.setAlignment(Pos.CENTER);
+        components.add(next);
 
         Scene scene = new Scene(layout);
-        window.setScene(scene);
-        window.showAndWait();
-    }
-    public static void getChoice(ChoiceBox<String> choiceBox){
-        final String player = choiceBox.getValue();
-        System.out.println(player);
-    }
-    public static void getChoice2(ChoiceBox<String> choiceBox2){
-        String whichFigureiIsP1 = choiceBox2.getValue();
-        System.out.println(whichFigureiIsP1);
-    }
-    public static void getChoice3(ChoiceBox<String> choiceBox3){
-        String whichFigureStart = choiceBox3.getValue();
-        System.out.println(whichFigureStart);
+        setScene(scene);
     }
 
+    private void doNext(ActionEvent actionEvent) {
+        GameSettings settings = GameSettings.getInstance();
+        settings.setPlayer(getPlayer());
+//        settings.setFigure(getFigure());
+//        settings.setFirstPlayer(getFirstPlayer());
+        System.out.println(settings.getPlayer());
+//        System.out.println(settings.getFigure());
+//        System.out.println(settings.getFirstPlayer());
+        close();
+    }
+
+    private void initBox(String title) {
+        initModality(Modality.APPLICATION_MODAL);
+        setTitle(title);
+        setMinWidth(350);
+        setMaxWidth(350);
+        setMinHeight(250);
+        setMaxHeight(250);
+    }
+
+    VBox createWindowLayout() {
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10));
+        layout.setAlignment(Pos.CENTER);
+        return layout;
+    }
+
+    ChoiceBox<String> createPlayerSelector() {
+        ChoiceBox<String> playerCB = new ChoiceBox<>();
+        playerCB.getItems().addAll("Player", "Computer");
+
+        VBox playerVB = new VBox();
+        playerVB.getChildren().addAll(
+                new Label("Will you play against other player or against computer?"),
+                playerCB
+        );
+        playerCB.setValue("Player");
+        playerVB.setAlignment(Pos.CENTER);
+        components.add(playerVB);
+        return playerCB;
+    }
+
+//    ChoiceBox<String> createFigureSelector() {
+//        ChoiceBox<String> figureCB = new ChoiceBox<>();
+//        figureCB.getItems().addAll("X", "O");
+//
+//        VBox figureVB = new VBox();
+//        figureVB.getChildren().addAll(
+//                new Label("Which figure will you select?"),
+//                figureCB
+//        );
+//        figureVB.setAlignment(Pos.CENTER);
+//        components.add(figureVB);
+//        return figureCB;
+//    }
+//
+//    ChoiceBox<String> createFirstPlayerSelector() {
+//        ChoiceBox<String> firstPlayerCB = new ChoiceBox<>();
+//        firstPlayerCB.getItems().addAll("X", "O");
+//
+//        VBox firstPlayerVB = new VBox();
+//        firstPlayerVB.getChildren().addAll(
+//                new Label("Who will start?"),
+//                firstPlayerCB
+//        );
+//        firstPlayerVB.setAlignment(Pos.CENTER);
+//        components.add(firstPlayerVB);
+//        return firstPlayerCB;
+//    }
+
+    public String getPlayer() {
+        return playerCB.getValue();
+    }
+//    public String getFigure() {
+//        return figureCB.getValue();
+//    }
+//
+//    public String getFirstPlayer() {
+//        return firstPlayerCB.getValue();
+//    }
 }
 
 

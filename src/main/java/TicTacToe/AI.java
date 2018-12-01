@@ -47,7 +47,6 @@ public class AI {
             emptyCells.get(rnd).drawO();
         }
     }
-
 }
 
 

@@ -18,8 +18,8 @@ public class UpdateLog {
         window.setTitle(title);
         window.setMinWidth(550);
         window.setMaxWidth(550);
-        window.setMinHeight(300);
-        window.setMaxHeight(300);
+        window.setMinHeight(400);
+        window.setMaxHeight(400);
 
         Label label = new Label();
         label.setText(message);

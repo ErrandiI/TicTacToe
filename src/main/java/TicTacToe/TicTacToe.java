@@ -21,20 +21,20 @@ public class TicTacToe extends Application {
 
     private Label statusMsg = new Label("Click File -> Start a New Game");
     private Cell [][] board = new Cell[3][3];
-    private boolean withComputer = true;
+    public boolean withComputer = true;
     private List<WinCondition> checkList = new ArrayList<>();
     private boolean playable = true;
     private boolean turnX = true;
     public boolean startable = false;
     Stage window;
     BorderPane layout;
+    private StartGameBox startGameBox;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
         window = primaryStage;
         window.setTitle("Tic Tac Toe");
-
         window.setOnCloseRequest(e -> {
             e.consume();
             closeProgram();
@@ -63,7 +63,7 @@ public class TicTacToe extends Application {
 
         //Menu Help items
         MenuItem howToPlay = new MenuItem("How to play...");
-        howToPlay.setOnAction(e -> AlertBox2.display("How to play", "The board is made of a 3 x 3 grid of squares. Though traditionally, the first player goes with \"X\", but you can \ndecide whether you wants to go with \"X\"s or \"O\"s. These symbols will be placed on the table, in the attempt to \nhave three of them in a row. If you're going first, then the best move you can make is to move into the center. \nThis will maximize your chances of winning. The first player to draw three of his or her symbols in a row, \noptimal strategy, then there's a good chance that no one will win because you will have blocked all of each \nother's opportunities to create a row of three. "));
+        howToPlay.setOnAction(e -> AlertBox2.display("How to play", "The board is made of a 3 x 3 grid of squares. Though traditionally, the first player goes with \"X\". \nYou need to have three symbols in a row. If you're going first, then the best move you can make is to \nmove into the center. This will maximize your chances of winning.\nTo play X, click left mouse button. To play O, click right mouse button.\nIf you play with computer, than you need to click right mouse button also. After click, \ncomputer will make his move."));
         helpMenu.getItems().add(howToPlay);
         helpMenu.getItems().add(new SeparatorMenuItem());
         MenuItem about = new MenuItem("About...");
@@ -72,7 +72,7 @@ public class TicTacToe extends Application {
 
         //Update Log menu
         MenuItem updateLog = new MenuItem("What's new...");
-        updateLog.setOnAction(e -> UpdateLog.display("Latest application updates", " 14.11.2018 - Build 0.2 \n\n * Removed empty lines. \n * Added one boolean to application functionality, which does not allow to cheat in game. \n * Added an update log. \n\n12.11.2018 - Build 0.1 \n\n *  Game was created."));
+        updateLog.setOnAction(e -> UpdateLog.display("Latest application updates", " 1.12.2018 - Build 0.3\n * Changed some display settings \n * Added easy computer mode \n\n 14.11.2018 - Build 0.2 \n\n * Removed empty lines. \n * Added one boolean to application functionality, which does not allow to cheat in game. \n * Added an update log. \n\n12.11.2018 - Build 0.1 \n\n *  Game was created."));
         updateLogMenu.getItems().add(updateLog);
 
 
@@ -134,7 +134,7 @@ public class TicTacToe extends Application {
                 } else {
                     if (!playable)
                         return;
-
+                    playerReader();
                     if (withComputer && !turnX) {
                         AI.computerMove(turnX,board);
                         turnX=!turnX;
@@ -234,7 +234,6 @@ public class TicTacToe extends Application {
     private class WinCondition {
 
         private Cell[] cells;
-
         public WinCondition(Cell... cells) {
             this.cells = cells;
         }
@@ -248,8 +247,10 @@ public class TicTacToe extends Application {
         }
     }
     private void startNewGame() {
-        if (!startable)
-            StartGameBox.display("Start settings", "Before you will start you need to select a few settings");
+        if (!startable){
+            startGameBox = new StartGameBox("Start settings", "Before start you have to select below option");
+            startGameBox.showAndWait();
+        }
         startable = true;
 
         for (int i = 0; i < 3; i++) {
@@ -273,7 +274,21 @@ public class TicTacToe extends Application {
         if (answer)
             window.close();
     }
-//    private void playerReader() {
-//        StartGameBox.getChoice();
-//    }
+
+    private void playerReader() {
+
+        startGameBox.getPlayer();
+        if (startGameBox.getPlayer().equals("Player")){
+            withComputer = false;
+        } else {
+            withComputer = true;
+        }
+//        startGameBox.getFigure();
+//        startGameBox.getFirstPlayer();
+//
+//        GameSettings settings = GameSettings.getInstance();
+//        settings.getPlayer();
+//        settings.getFigure();
+//        settings.getFirstPlayer();
+    }
 }
